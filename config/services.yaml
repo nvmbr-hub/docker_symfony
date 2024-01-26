@@ -19,13 +19,13 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-    App\Entity\Product:
-        arguments:
-            $name: 'Example Product'
-            $price: 50.00
-
-        App\Service\PaymentService:
-            arguments:
-                $product: '@App\Entity\Product'
+#    App\Entity\Product:
+#        arguments:
+#            $name: 'Example Product'
+#            $price: 50.00
+#
+#        App\Service\PaymentService:
+#            arguments:
+#                $product: '@App\Entity\Product'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

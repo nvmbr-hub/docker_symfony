@@ -8,6 +8,12 @@ use Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor;
 
 class PaymentService
 {
+    private $product;
+
+    public function __construct(Product $product)
+    {
+        $this->product = $product;
+    }
 //    private PaypalPaymentProcessor $paypalProcessor;
 //    private StripePaymentProcessor $stripeProcessor;
 //
@@ -16,13 +22,6 @@ class PaymentService
 //        $this->paypalProcessor = $paypalProcessor;
 //        $this->stripeProcessor = $stripeProcessor;
 //    }
-    private $product;
-
-    public function __construct(Product $product)
-    {
-        $this->product = $product;
-    }
-
     public function calculatePrice($data)
     {
 //        $product = new Product();
