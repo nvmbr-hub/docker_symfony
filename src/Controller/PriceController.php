@@ -40,13 +40,24 @@ class PriceController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
         $requestDataParam = $request->query->all();
+        //Checking ID from response with DB Object ORM
 
         try {
-            $price = $this->paymentService->calculatePrice($requestDataParam);
+            $price= 100000;
+            //$price = $this->paymentService->calculatePrice($requestDataParam);
             return new JsonResponse(['price' => $price]);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 400);
         }
+    }
+
+    # Получение продукта
+    public function getProduct (PaymentService $paymentService)
+    {
+        $result = $paymentService->processPayment();
+
+
+        return $result;
     }
 
 }
