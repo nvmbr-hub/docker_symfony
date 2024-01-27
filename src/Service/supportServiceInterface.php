@@ -4,7 +4,7 @@ namespace App\Service;
 
 use PhpParser\Node\Expr\Cast\Int_;
 
-interface CountryTaxInterface
+interface supportServiceInterface
 {
     public function getCountryTax(string $taxNumber): int;
     public function getCoupon(string $productCoupon): array;

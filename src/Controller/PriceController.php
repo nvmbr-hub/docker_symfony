@@ -47,11 +47,17 @@ class PriceController extends AbstractController
     #[Route('/purchase', name: 'post_purchase', methods: ['POST'])]
     public function postPayment(Request $request): JsonResponse
     {
+        // TODO: Сделать реализовать валидацию всех полей (в том числе корректность tax номера согласно формату) в теле запросов, используя Symfony validator
         $requestDataParam = $request->query->all();
 
         try {
-            $price = $this->paymentService->processPurchase($requestDataParam);
-            return new JsonResponse(['price' => $price]);
+            $response = $this->paymentService->processPurchase($requestDataParam);
+            if ($response || $response === null) {
+                return new JsonResponse(['Payment was successful' => $response]);
+            } else {
+                return new JsonResponse(['Payment is not successful' => $response]);
+            }
+
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 400);
         }

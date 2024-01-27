@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-class TaxService implements CountryTaxInterface
+class supportService implements supportServiceInterface
 {
     private array $taxMap = [
         'de' => 19,
@@ -16,12 +16,14 @@ class TaxService implements CountryTaxInterface
         $countryCode = substr($taxNumber, 0, 2);
         $countryCode = strtolower($countryCode);
 
-        if (array_key_exists($countryCode, $this->taxMap)) {
+        return  $this->taxMap[$countryCode] ?? 0;
 
-            return $this->taxMap[$countryCode];
-        } else {
-            return 0;
-        }
+//        if (array_key_exists($countryCode, $this->taxMap)) {
+//
+//            return $this->taxMap[$countryCode];
+//        } else {
+//            return 0;
+//        }
     }
     public function getCoupon(string $productCoupon): array
     {

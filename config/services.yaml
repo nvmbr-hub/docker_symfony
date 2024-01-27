@@ -19,6 +19,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    Systemeio\TestForCandidates\PaymentProcessor\PaypalPaymentProcessor:
+
+    Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor:
+
 #    App\Entity\Product:
 #        arguments:
 #            $name: 'Example Product'

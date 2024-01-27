@@ -12,15 +12,14 @@ class PaymentService
 {
 
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly CountryTaxInterface    $taxService,
-        PaypalPaymentProcessor $paypalProcessor,
-        StripePaymentProcessor $stripeProcessor,
+        private readonly EntityManagerInterface  $em,
+        private readonly supportServiceInterface $taxService,
+        private readonly PaypalPaymentProcessor  $paypalProcessor,
+        private readonly StripePaymentProcessor  $stripeProcessor,
 
     )
     {
-        $this->paypalProcessor = $paypalProcessor;
-        $this->stripeProcessor = $stripeProcessor;
+
     }
 
     public function calculatePrice(array $requestDataParam): float|array|int
@@ -34,28 +33,27 @@ class PaymentService
         $coupon = $this->taxService->getCoupon($productCoupon);
         $tax = $this->taxService->getCountryTax($productTax);
 
-        return $this->getTotalPrice($productPrice, $coupon, $tax);
+        return $this->calculateTotalPrice($productPrice, $coupon, $tax);
     }
 
-    public function getTotalPrice(int $productPrice, array $coupon, int $tax, $type = 'fixed', $discountAmount = 'discountAmount'): float|int
+    public function calculateTotalPrice(int $productPrice, array $coupon, int $tax, $type = 'fixed', $discountAmount = 'discountAmount'): float
     {
-
-
+        $discount = $coupon[$discountAmount];
         if (!$coupon[$type]) {
-            $discountAmount = ($coupon[$discountAmount] / 100) * $productPrice;
-
+            $discount = ($discount / 100) * $productPrice;
         }
-        $productPrice = $productPrice + (($tax / 100) * $productPrice);
+        $productPrice = $productPrice - $discount;
 
-        return $productPrice - $discountAmount;
+        return $productPrice + (($tax / 100) * $productPrice);
     }
 
-    public function processPurchase(array $requestDataParam): bool
+    public function processPurchase(array $requestDataParam): bool|null
     {
         $totalPriceInCents = $this->calculatePrice($requestDataParam);
-
         $paymentName = $requestDataParam['paymentProcessor'];
-        if ($paymentName == 'paypal') {
+        // TODO: добавления новых PaymentProcessors
+
+        if ($paymentName === 'paypal') {
             return $this->paypalProcessor->pay($totalPriceInCents);
         }
         return $this->stripeProcessor->processPayment($totalPriceInCents);
