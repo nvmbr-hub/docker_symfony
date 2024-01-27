@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ProductRepository;
 use App\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,17 +12,15 @@ use Symfony\Flex\Response;
 
 class PriceController extends AbstractController
 {
-    private PaymentService $paymentService;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(
+        private PaymentService $paymentService,
+    )
     {
-        $this->paymentService = $paymentService;
+
     }
 
-//    #[Route('/calculate-price', name: 'get_price', methods: ['GET'])]
-    /**
-     * @Route("/calculate-price", methods={"GET"})
-     */
+    #[Route('/calculate-price', name: 'get_price', methods: ['GET'])]
     public function getCalculatePrice(Request $request): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
@@ -32,32 +31,31 @@ class PriceController extends AbstractController
         ]);
     }
 
-//    #[Route('/calculate-price', name: 'post_price', methods: ['POST'])]
-    /**
-     * @Route("/calculate-price", methods={"POST"})
-     */
-    public function calculatePrice(Request $request): JsonResponse
+    #[Route('/calculate-price', name: 'post_price', methods: ['POST'])]
+    public function postCalculatePrice(Request $request): JsonResponse
     {
-        $requestData = json_decode($request->getContent(), true);
         $requestDataParam = $request->query->all();
-        //Checking ID from response with DB Object ORM
 
         try {
-            $price= 100000;
-            //$price = $this->paymentService->calculatePrice($requestDataParam);
+            $price = $this->paymentService->calculatePrice($requestDataParam);
             return new JsonResponse(['price' => $price]);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 400);
         }
     }
 
-    # Получение продукта
-    public function getProduct (PaymentService $paymentService)
+    #[Route('/purchase', name: 'post_purchase', methods: ['POST'])]
+    public function postPayment(Request $request): JsonResponse
     {
-        $result = $paymentService->processPayment();
+        $requestDataParam = $request->query->all();
 
-
-        return $result;
+        try {
+            $price = $this->paymentService->processPurchase($requestDataParam);
+            return new JsonResponse(['price' => $price]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 400);
+        }
     }
+
 
 }
