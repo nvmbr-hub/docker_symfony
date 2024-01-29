@@ -11,12 +11,12 @@ docker compose up -d
 
 
 ## Начинаем проект Symfony skeleton ##
-1. заходим в контейнер
+1. Заходим в контейнер
 
 ```
 docker exec -it php-skeleton  /bin/bash
 ```
-устанавливаем симфу
+2. Установливаем
 ```
 composer install
 ```
@@ -28,12 +28,6 @@ composer require --dev symfony/maker-bundle
 composer require symfony/security-bundle
 ```
 
- Добавляем в .env файл
-```
-DATABASE_URL="postgresql://usr:97y2amDpm@pg-cmf:5432/usr?serverVersion=15&charset=utf8"
-MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
-```
-
 3. Добавляем анотации и мессенджер
 
 
@@ -43,12 +37,12 @@ MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
   composer require form validator
 ```
 4. Curl команды для ручного тестирования 
-
+   * ### Расчет цены продукта
 ```
-    ### Расчет цены продукта
     curl -X POST http://127.0.0.1:80/calculate-price -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "DE123456789", "couponCode": "D15"}'
-    
-    ### Покупка продукта
+```
+   * ### Покупка продукта
+```
     curl -X POST http://127.0.0.1:80/purchase -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "IT12345678900", "couponCode": "D15", "paymentProcessor": "paypal"}'
 
 ```
