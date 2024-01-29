@@ -36,13 +36,14 @@ composer require symfony/security-bundle
   composer require templates
   composer require form validator
 ```
-4. Curl команды для ручного тестирования 
+4. Curl команды для ручного тестирования
+   
    * ### Расчет цены продукта
-```
-    curl -X POST http://127.0.0.1:80/calculate-price -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "DE123456789", "couponCode": "D15"}'
-```
+        ```
+            curl -X POST http://127.0.0.1:80/calculate-price -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "DE123456789", "couponCode": "D15"}'
+        ```
    * ### Покупка продукта
-```
-    curl -X POST http://127.0.0.1:80/purchase -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "IT12345678900", "couponCode": "D15", "paymentProcessor": "paypal"}'
-
-```
+        ```
+            curl -X POST http://127.0.0.1:80/purchase -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "IT12345678900", "couponCode": "D15", "paymentProcessor": "paypal"}'
+        
+        ```
