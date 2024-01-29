@@ -20,8 +20,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Service\PaymentProcessor\PaymentProcessorFactory:
+    App\Service\PaymentProcessor\Adapter\PaypalPaymentAdapter:
+    App\Service\PaymentProcessor\Adapter\StripePaymentAdapter:
     Systemeio\TestForCandidates\PaymentProcessor\PaypalPaymentProcessor:
-
     Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor:
 
 #    App\Entity\Product:

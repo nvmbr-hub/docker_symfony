@@ -3,26 +3,16 @@
 namespace App\Service;
 
 use App\Entity\Product;
-use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Systemeio\TestForCandidates\PaymentProcessor\PaypalPaymentProcessor;
-use Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor;
 
 class PaymentService
 {
-
     public function __construct(
         private readonly EntityManagerInterface  $em,
-        private readonly supportServiceInterface $taxService,
-        private readonly PaypalPaymentProcessor  $paypalProcessor,
-        private readonly StripePaymentProcessor  $stripeProcessor,
+        private readonly SupportServiceInterface $taxService,
+    ) {}
 
-    )
-    {
-
-    }
-
-    public function calculatePrice(array $requestDataParam): float|array|int
+    public function processCalculatePrice(array $requestDataParam): float
     {
         $productId = (int)$requestDataParam['product'];
         $productTax = (string)$requestDataParam['taxNumber'];
@@ -47,17 +37,15 @@ class PaymentService
         return $productPrice + (($tax / 100) * $productPrice);
     }
 
-    public function processPurchase(array $requestDataParam): bool|null
+    public function processPurchase(array $requestDataParam): bool
     {
-        $totalPriceInCents = $this->calculatePrice($requestDataParam);
-        $paymentName = $requestDataParam['paymentProcessor'];
-        // TODO: добавления новых PaymentProcessors
+        $totalPriceInCents = $this->processCalculatePrice($requestDataParam);
+        $paymentType = $requestDataParam['paymentProcessor'];
 
-        if ($paymentName === 'paypal') {
-            return $this->paypalProcessor->pay($totalPriceInCents);
-        }
-        return $this->stripeProcessor->processPayment($totalPriceInCents);
+        $paymentProcessorFactory = new PaymentProcessorFactory();
+        $paymentProcessor = $paymentProcessorFactory->payment($paymentType);
 
+        return $paymentProcessor->pay($totalPriceInCents);
     }
 
 }
