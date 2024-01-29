@@ -10,7 +10,7 @@ docker compose up -d
 запуститься три контейнера - php-fpm, nginx, postgresql
 
 
-## Начинаем проект Symfony skeleton ##
+## Запуск проект Symfony skeleton ##
 1. Заходим в контейнер
 
 ```
