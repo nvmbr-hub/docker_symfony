@@ -34,12 +34,7 @@ DATABASE_URL="postgresql://usr:97y2amDpm@pg-cmf:5432/usr?serverVersion=15&charse
 MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
 ```
 
-3. Добавляем пользователя и все его миграции
-```
-php bin/console make:user
-```
-
-4. Добавляем анотации и мессенджер
+3. Добавляем анотации и мессенджер
 
 
 ```
@@ -47,29 +42,13 @@ php bin/console make:user
   composer require templates
   composer require form validator
 ```
+4. Curl команды для ручного тестирования 
 
-5. Создаем форму регистрации
 ```
-   php bin/console make:registration-form
-   composer require symfonycasts/verify-email-bundle symfony/mailer
-```
-6. Устанавливаю меснеджер
-```
-   composer require messenger
-   composer require symfony/doctrine-messenger
-```
-7. Теперь письма отправляются асинхронно
-```
-   php bin/console messenger:consume async
- ```
+    ### Расчет цены продукта
+    curl -X POST http://127.0.0.1:80/calculate-price -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "DE123456789", "couponCode": "D15"}'
+    
+    ### Покупка продукта
+    curl -X POST http://127.0.0.1:80/purchase -H "Content-Type: application/json" -d '{"product": 1, "taxNumber": "IT12345678900", "couponCode": "D15", "paymentProcessor": "paypal"}'
 
-8. Устанавливаю фронтенд
-   composer require symfony/webpack-encore-bundle
-   composer require symfony/asset
-   yarn install
-   yarn add bootsrap
-   yarn add @fortawesome/fontawesome-free
-9.  Сброс пароля
-    composer require symfonycasts/reset-password-bundle
-10. Форма логина
-    php bin/console make:auth
+```
