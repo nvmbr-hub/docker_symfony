@@ -79,7 +79,11 @@ class PriceController extends AbstractController
             'product' => [
                 new Assert\NotBlank(),
                 new Assert\Type('integer'),
-                ],
+                new Assert\GreaterThanOrEqual([
+                    'value' => 0,
+                    'message' => 'The value must be a non-negative number.',
+                ]),
+            ],
             'taxNumber' => [
                 new Assert\NotBlank(),
                 new Assert\Length(
@@ -111,6 +115,10 @@ class PriceController extends AbstractController
             'product' => [
                 new Assert\NotBlank(),
                 new Assert\Type('integer'),
+                new Assert\GreaterThanOrEqual([
+                    'value' => 0,
+                    'message' => 'The value must be a non-negative number.',
+                ]),
             ],
             'taxNumber' => [
                 new Assert\NotBlank(),
