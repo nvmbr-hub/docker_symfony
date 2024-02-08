@@ -73,8 +73,6 @@ class PriceController extends AbstractController
 
     private function getCalculatePriceConstraints(): Assert\Collection
     {
-        // Ваши ограничения для второй функции
-        // Например:
         return new Assert\Collection([
             'product' => [
                 new Assert\NotBlank(),

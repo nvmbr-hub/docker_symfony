@@ -17,13 +17,6 @@ class SupportService implements SupportServiceInterface
         $countryCode = strtolower($countryCode);
 
         return  $this->taxMap[$countryCode] ?? 0;
-
-//        if (array_key_exists($countryCode, $this->taxMap)) {
-//
-//            return $this->taxMap[$countryCode];
-//        } else {
-//            return 0;
-//        }
     }
     public function getCoupon(string $productCoupon): array
     {
