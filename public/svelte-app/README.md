@@ -39,7 +39,7 @@ You can preview the production build with `npm run preview`.
 
 
 # Structure front-end project 
-
+```
 my-project/
 ├ src/
 │ ├ lib/
@@ -63,3 +63,4 @@ my-project/
 ├ svelte.config.js
 ├ tsconfig.json
 └ vite.config.js
+```
