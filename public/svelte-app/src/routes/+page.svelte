@@ -1,33 +1,20 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import 'tailwindcss/tailwind.css';
 </script>
 
 <svelte:head>
 	<title>Home</title>
 	<meta name="description" content="Svelte demo app" />
+	<link
+			href="https://fonts.googleapis.com/css?family=Merriweather:300,400,500|Roboto:300,400,500|Material+Icons&display=swap"
+			rel="stylesheet"
+	/>
 </svelte:head>
 
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
-
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
-
+<body data-theme="skeleton">
+	<a href="/" class="card p-4">Link</a>
+	<a href="/" class="card p-4">Link</a>
+</body>
 <style>
 	section {
 		display: flex;
