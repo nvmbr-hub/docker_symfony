@@ -20,7 +20,7 @@ class Coupon
     private ?string $coupon_name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $Ð²Ñdiscount = null;
+    private ?float $discount = null;
 
     public function getId(): ?int
     {
@@ -51,14 +51,14 @@ class Coupon
         return $this;
     }
 
-    public function getÐ²Ñdiscount(): ?float
+    public function getDiscount(): ?float
     {
-        return $this->Ð²Ñdiscount;
+        return $this->discount;
     }
 
-    public function setÐ²Ñdiscount(?float $Ð²Ñdiscount): static
+    public function setDiscount(?float $discount): static
     {
-        $this->Ð²Ñdiscount = $Ð²Ñdiscount;
+        $this->discount = $discount;
 
         return $this;
     }
