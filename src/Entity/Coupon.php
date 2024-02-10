@@ -14,7 +14,7 @@ class Coupon
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $id_coupon = null;
+    private ?bool $percent = null;
 
     #[ORM\Column(length: 255)]
     private ?string $coupon_name = null;
@@ -27,14 +27,14 @@ class Coupon
         return $this->id;
     }
 
-    public function getIdCoupon(): ?int
+    public function getPercent(): ?bool
     {
-        return $this->id_coupon;
+        return $this->percent;
     }
 
-    public function setIdCoupon(int $id_coupon): static
+    public function setPercent(bool $percent): static
     {
-        $this->id_coupon = $id_coupon;
+        $this->percent = $percent;
 
         return $this;
     }
