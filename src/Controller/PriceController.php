@@ -49,6 +49,7 @@ class PriceController extends AbstractController
     #[Route('/purchase', name: 'post_purchase', methods: ['POST'])]
     public function postPayment(Request $request): JsonResponse
     {
+        // TODO: DTO
         $requestData = $request->query->all();
         $constraints = $this->getPurchaseConstraints();
         if (isset($requestData['product'])) {
