@@ -8,5 +8,6 @@ interface SupportServiceInterface
 {
     public function getCountryTax(string $taxNumber): int;
     public function getCoupon(string $productCoupon): array;
+    public function getProductPrice(int $productId): int|float;
 
 }

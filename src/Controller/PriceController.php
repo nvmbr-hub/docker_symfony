@@ -32,8 +32,9 @@ class PriceController extends AbstractController
     public function postCalculatePrice(Request $request): JsonResponse
     {
         $requestData = $request->query->all();
-        $constraints = $this->getCalculatePriceConstraints();
-        $violations = $this->validator->validate($requestData, $constraints);
+        $requestData['product'] = intval($requestData['product'] ?? 0);
+
+        $violations = $this->validator->validate($requestData, $this->getConstraints($request));
 
         if (count($violations) > 0) {
             return $this->createValidationErrorResponse($violations);
@@ -49,13 +50,10 @@ class PriceController extends AbstractController
     #[Route('/purchase', name: 'post_purchase', methods: ['POST'])]
     public function postPayment(Request $request): JsonResponse
     {
-        // TODO: DTO
         $requestData = $request->query->all();
-        $constraints = $this->getPurchaseConstraints();
-        if (isset($requestData['product'])) {
-            $requestData['product'] = intval($requestData['product']);
-        }
-        $violations = $this->validator->validate($requestData, $constraints);
+        $requestData['product'] = intval($requestData['product'] ?? 0);
+
+        $violations = $this->validator->validate($requestData, $this->getConstraints($request));
 
         if (count($violations) > 0) {
             return $this->createValidationErrorResponse($violations);
@@ -72,93 +70,61 @@ class PriceController extends AbstractController
         }
     }
 
-    private function getCalculatePriceConstraints(): Assert\Collection
-    {
-        return new Assert\Collection([
-            'product' => [
-                new Assert\NotBlank(),
-                new Assert\Type('integer'),
-                new Assert\GreaterThanOrEqual([
-                    'value' => 0,
-                    'message' => 'The value must be a non-negative number.',
-                ]),
-            ],
-            'taxNumber' => [
-                new Assert\NotBlank(),
-                new Assert\Length(
-                    min: 11,
-                    max: 13,
-                    minMessage: 'Ваше имя должно быть хотя бы {{ limit }} символов в длину',
-                    maxMessage: 'Ваше имя не может быть больше {{ limit }} символов в длину',
-                ),
-                new Assert\Regex([
-                    'pattern' => $this->getTaxNumberRegex(),
-                    'message' => 'Invalid tax number format.',
-                ]),
-            ],
-            'couponCode' => [
-                new Assert\NotBlank(),
-                new Assert\Length(
-                    min: 3,
-                    max: 8,
-                    minMessage: 'Ваше имя должно быть хотя бы {{ limit }} символов в длину',
-                    maxMessage: 'Ваше имя не может быть больше {{ limit }} символов в длину',
-                ),
-            ],
-        ]);
-    }
-
-    private function getPurchaseConstraints(): Assert\Collection
-    {
-        return new Assert\Collection([
-            'product' => [
-                new Assert\NotBlank(),
-                new Assert\Type('integer'),
-                new Assert\GreaterThanOrEqual([
-                    'value' => 0,
-                    'message' => 'The value must be a non-negative number.',
-                ]),
-            ],
-            'taxNumber' => [
-                new Assert\NotBlank(),
-                new Assert\Length(
-                    min: 11,
-                    max: 13,
-                    minMessage: 'Ваше имя должно быть хотя бы {{ limit }} символов в длину',
-                    maxMessage: 'Ваше имя не может быть больше {{ limit }} символов в длину',
-                ),
-                new Assert\Regex([
-                    'pattern' => $this->getTaxNumberRegex(),
-                    'message' => 'Invalid tax number format.',
-                ]),
-            ],
-            'couponCode' => [
-                new Assert\NotBlank(),
-                new Assert\Length(
-                    min: 3,
-                    max: 8,
-                    minMessage: 'Ваше имя должно быть хотя бы {{ limit }} символов в длину',
-                    maxMessage: 'Ваше имя не может быть больше {{ limit }} символов в длину',
-                ),
-            ],
-            'paymentProcessor' => new Assert\NotBlank(),
-        ]);
-    }
-
     private function createValidationErrorResponse($violations): JsonResponse
     {
         $errors = [];
         foreach ($violations as $violation) {
             $errors[$violation->getPropertyPath()] = $violation->getMessage();
         }
+
         return new JsonResponse(['errors' => $errors], 400);
+    }
+
+    private function getConstraints(Request $request): Assert\Collection
+    {
+        $constraints = [
+            'product' => [
+                new Assert\NotBlank(),
+                new Assert\Type('integer'),
+                new Assert\GreaterThanOrEqual([
+                    'value' => 0,
+                    'message' => 'The value must be a non-negative number.',
+                ]),
+            ],
+            'taxNumber' => [
+                new Assert\NotBlank(),
+                new Assert\Length([
+                    'min' => 11,
+                    'max' => 13,
+                    'minMessage' => 'The tax number must be at least {{ limit }} characters long.',
+                    'maxMessage' => 'The tax number cannot be longer than {{ limit }} characters.',
+                ]),
+                new Assert\Regex([
+                    'pattern' => $this->getTaxNumberRegex(),
+                    'message' => 'Invalid tax number format.',
+                ]),
+            ],
+            'couponCode' => [
+                new Assert\NotBlank(),
+                new Assert\Length([
+                    'min' => 3,
+                    'max' => 8,
+                    'minMessage' => 'The coupon code must be at least {{ limit }} characters long.',
+                    'maxMessage' => 'The coupon code cannot be longer than {{ limit }} characters.',
+                ]),
+            ],
+        ];
+
+        if ($request->attributes->get('_route') === 'post_purchase') {
+            $constraints['paymentProcessor'] = new Assert\NotBlank();
+        }
+
+        return new Assert\Collection($constraints);
     }
 
     private function getTaxNumberRegex(): string
     {
         return '/^(DE|IT|GR|FR\D{2})\w{9,11}/';
     }
-
-
 }
 

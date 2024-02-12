@@ -2,14 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\Product;
-use Doctrine\ORM\EntityManagerInterface;
+
 
 class PaymentService
 {
     public function __construct(
-        private readonly EntityManagerInterface  $em,
-        private readonly SupportServiceInterface $taxService,
+        private SupportService $supportService,
+
     ) {}
 
     public function processCalculatePrice(array $requestDataParam): float
@@ -18,15 +17,16 @@ class PaymentService
         $productTax = (string)$requestDataParam['taxNumber'];
         $productCoupon = (string)$requestDataParam['couponCode'];
 
-        $product = $this->em->find(Product::class, $productId);
-        $productPrice = $product->getPrice();
-        $coupon = $this->taxService->getCoupon($productCoupon);
-        $tax = $this->taxService->getCountryTax($productTax);
+        $productPrice = $this->supportService->getProductPrice($productId);
+
+        $coupon = $this->supportService->getCoupon($productCoupon);
+
+        $tax = $this->supportService->getCountryTax($productTax);
 
         return $this->calculateTotalPrice($productPrice, $coupon, $tax);
     }
 
-    public function calculateTotalPrice(int $productPrice, array $coupon, int $tax, $type = 'fixed', $discountAmount = 'discountAmount'): float
+    public function calculateTotalPrice(int $productPrice, array $coupon, int $tax, $type = 'percent', $discountAmount = 'discount'): float
     {
         $discount = $coupon[$discountAmount];
         if (!$coupon[$type]) {
