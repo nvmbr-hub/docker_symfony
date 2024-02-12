@@ -1,3 +1,3 @@
 [submodule "piblic/tea-store"]
-	path = piblic/tea-store
+	path = public/tea-store
 	url = https://github.com/nvmbr-hub/tea-store
